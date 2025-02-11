@@ -22,8 +22,8 @@ interface ICreateSession {
 export class UserService {
   private userRepository: UserRepository;
 
-  constructor() {
-    this.userRepository = new UserRepository();
+  constructor(userRepository: UserRepository = new UserRepository()) {
+    this.userRepository = userRepository;
   }
 
   async createUser({
@@ -32,15 +32,7 @@ export class UserService {
     email,
   }: ICreateUserDTO): Promise<User | null> {
     try {
-      if (!name) {
-        throw new AppError('Dados inválidos!', 401);
-      }
-
-      if (!password) {
-        throw new AppError('Dados inválidos!', 401);
-      }
-
-      if (!email) {
+      if (!name || !password || !email) {
         throw new AppError('Dados inválidos!', 401);
       }
 
@@ -59,10 +51,15 @@ export class UserService {
         password: hashPassword,
         email,
       };
+
       const createUser = await this.userRepository.createUser(user);
 
       return createUser;
     } catch (err) {
+      if (err instanceof AppError) {
+        throw err;
+      }
+
       throw new AppError('Erro ao criar nova conta!', 400);
     }
   }
@@ -117,7 +114,7 @@ export class UserService {
 
       return { user, token };
     } catch (err) {
-      throw new AppError('Erro ao tentar buscar usuário pelo ID!', 400);
+      throw new AppError('Erro ao tentar criar sessão!', 400);
     }
   }
 }

@@ -8,7 +8,10 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "danger": "danger ci",
-    "format": "prettier --write 'src/**/*.{js,ts,tsx}'"
+    "format": "prettier --write 'src/**/*.{js,ts,tsx}'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -27,11 +30,14 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.13.1",
     "danger": "^12.3.3",
     "danger-plugin-prettier": "^0.2.0-development",
+    "jest": "^29.7.0",
     "prettier": "^3.5.0",
+    "ts-jest": "^29.2.5",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.3"
   }
