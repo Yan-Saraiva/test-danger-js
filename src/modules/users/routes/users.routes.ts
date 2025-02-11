@@ -23,9 +23,9 @@ userRouter.post(
   )
 
   userRouter.post(
-    '/testando',
+    '/testando-danger',
     authMiddleware,
-    async (req, res, next) => usersController.create(req, res, next).then(() => next()),
+    async (req, res, next) => usersController.testandoDanger(req, res, next).then(() => next()),
   )
 
 export default userRouter;
