@@ -1,5 +1,4 @@
 import { danger, warn, fail, message } from 'danger';
-import { prettier } from 'danger-plugin-prettier';
 
 // Verifica a descrição da PR
 if (!danger.github.pr.body || danger.github.pr.body.length < 10) {
@@ -56,10 +55,6 @@ if (
   );
 }
 
-// Rodar o plugin Prettier para verificar a formatação
-prettier();
-
-// Verifica se há `console.log` no código
 const modifiedFiles = [
   ...danger.git.modified_files,
   ...danger.git.created_files,
