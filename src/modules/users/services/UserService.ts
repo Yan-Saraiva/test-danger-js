@@ -31,7 +31,6 @@ export class UserService {
     password,
     email,
   }: ICreateUserDTO): Promise<User | null> {
-    console.log('testando danger 2');
     try {
       if (!name) {
         throw new AppError('Dados inválidos!', 401);

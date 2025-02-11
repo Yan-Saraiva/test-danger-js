@@ -10,7 +10,6 @@ export class UsersController {
 
   async testandoDanger(req: Request, res: Response, next: Function) {
     try {
-      console.log('testando danger');
       const { name, email, password } = req.body;
       const createdUser = await this.userService.createUser({
         name,
