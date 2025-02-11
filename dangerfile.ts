@@ -1,5 +1,6 @@
 import { danger, fail, message, warn } from 'danger';
 import * as exec from 'child_process';
+import * as fs from 'fs';
 
 // Função para rodar os testes e capturar os resultados
 const runTests = async (): Promise<string> => {
@@ -12,6 +13,30 @@ const runTests = async (): Promise<string> => {
       resolve(stdout);
     });
   });
+};
+
+const analyzeCoverage = async () => {
+  try {
+    // Carrega o arquivo JSON de cobertura gerado pelo Jest
+    const coverageReport = JSON.parse(
+      fs.readFileSync('./coverage/lcov-report/lcov-report.json', 'utf-8'),
+    );
+
+    // Exemplo simples para verificar a cobertura, você pode ajustar isso conforme necessário
+    const coveragePercentage = parseFloat(coverageReport.total.statements.pct);
+
+    if (coveragePercentage < 80) {
+      warn(
+        `🚨 A cobertura de testes está abaixo de 80%. Cobertura atual: ${coveragePercentage}%`,
+      );
+    } else {
+      message(`✅ Cobertura de testes: ${coveragePercentage}%`);
+    }
+  } catch (err) {
+    fail(
+      'Não foi possível analisar a cobertura de testes. Certifique-se de que o relatório de cobertura foi gerado corretamente.',
+    );
+  }
 };
 
 // Função principal que irá rodar a lógica
@@ -28,8 +53,6 @@ const runDanger = async () => {
     const testResults = await runTests();
     console.log(testResults); // Exibe os resultados dos testes no console (útil para depuração)
 
-    // Caso queira fazer uma verificação personalizada sobre os testes,
-    // você pode analisar os resultados retornados e emitir falhas ou avisos.
     if (testResults.includes('FAIL')) {
       fail(
         'Alguns testes falharam. Verifique os logs dos testes para mais detalhes.',
@@ -40,6 +63,8 @@ const runDanger = async () => {
   } catch (err) {
     fail(`Erro ao rodar os testes: ${err}`);
   }
+
+  await analyzeCoverage();
 
   // Verifica mudanças no código e nos testes
   const hasTestChanges = danger.git.modified_files.some((file) =>
